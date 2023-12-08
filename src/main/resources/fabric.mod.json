@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "herometer",
+	"version": "${version}",
+	"name": "HeroMeter",
+	"description": "A mod about the cool man `Hero`, mainly shows performance.",
+	"authors": [
+		"Nate `Inan` Coldflower"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/herometer/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.inancoldflower.herometer.HeroMeter"
+		],
+		"client": [
+			"net.inancoldflower.herometer.HeroMeterClient"
+		],
+		"fabric-datagen": [
+			"net.inancoldflower.herometer.HeroMeterDataGenerator"
+		]
+	},
+	"mixins": [
+		"herometer.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.1",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
