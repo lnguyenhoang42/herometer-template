@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.inancoldflower.herometer.HeroMeter;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -15,7 +16,7 @@ import net.minecraft.util.Identifier;
 public class ModBlocks {
 
     public static final Block Inku_Egg_Block = registerBlock("inku_egg_block",
-            new Block(FabricBlockSettings.copyOf(Blocks.STONE).sounds(BlockSoundGroup.STONE)));
+            new Block(FabricBlockSettings.copyOf(Blocks.STONE).nonOpaque().pistonBehavior(PistonBehavior.DESTROY)));
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);
         return Registry.register(Registries.BLOCK, new Identifier(HeroMeter.MOD_ID, name), block);
