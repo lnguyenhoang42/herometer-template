@@ -3,13 +3,13 @@
 	"id": "herometer",
 	"version": "${version}",
 	"name": "HeroMeter",
-	"description": "A mod about the cool man `Hero`, mainly shows performance.",
+	"description": "A mod about the cool man `Hero`, mainly shows performance. Check homepage to join the discord server.",
 	"authors": [
 		"Nate `Inan` Coldflower"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://discord.gg/g6xJeMtRZm",
+		"sources": "https://github.com/lnguyenhoang42/herometer-template-1.20.4"
 	},
 	"license": "MIT",
 	"icon": "assets/herometer/icon.png",
