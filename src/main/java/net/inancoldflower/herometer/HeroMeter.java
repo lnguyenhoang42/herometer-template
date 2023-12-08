@@ -11,6 +11,6 @@ public class HeroMeter implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		LOGGER.info("Hello Fabric world!");
+        LOGGER.info("Felic is a very cool femboian!");
 	}
 }
