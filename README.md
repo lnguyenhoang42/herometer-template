@@ -9,6 +9,5 @@ That's all.
 <ul>
 <li>Custom Inku NPC</li>
 <li>Edible Inku Egg</li>
-<li>Light revamp of Subtitle</li>
 <li>And the Hero Meter which check for memory used vs memory available.</li>
 </ul>
