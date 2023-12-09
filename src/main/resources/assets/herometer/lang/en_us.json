@@ -1,7 +1,14 @@
 {
   "item.herometer.inku_egg": "Inku Egg",
+  "item.herometer.inku_egg_wearable": "Inku Head",
 
   "block.herometer.inku_egg_block": "Inku Big Egg",
+
+  "tooltip.herometer.inku_egg.edible": "This egg is edible, feels a little energetic from the sugar.",
+  "tooltip.herometer.inku_egg.wearable": "This egg can be wore on the head.",
+  "tooltip.herometer.inku_big_egg.place": "This egg can be placed. Probably something can be hatched.",
+
+  "entity.herometer.inku": "hero215sugar",
 
   "itemgroup.inku": "Inku Group"
 }

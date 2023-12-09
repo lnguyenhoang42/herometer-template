@@ -2,7 +2,10 @@ package net.inancoldflower.herometer;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.inancoldflower.herometer.block.ModBlocks;
+import net.inancoldflower.herometer.entity.ModEntities;
+import net.inancoldflower.herometer.entity.custom.InkuEntity;
 import net.inancoldflower.herometer.item.ModItemGroups;
 import net.inancoldflower.herometer.item.ModItems;
 import org.slf4j.Logger;
@@ -19,5 +22,9 @@ public class HeroMeter implements ModInitializer {
 		ModItemGroups.registerItemGroups();
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
+
+		ModEntities.registerModEntities();
+
+		FabricDefaultAttributeRegistry.register(ModEntities.INKU, InkuEntity.createInkuAttributes());
 	}
 }

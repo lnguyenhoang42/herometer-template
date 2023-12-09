@@ -13,15 +13,19 @@ import net.minecraft.util.Identifier;
 
 public class ModItemGroups {
     public static final ItemGroup INK_GROUP = Registry.register(Registries.ITEM_GROUP,
-            new Identifier(HeroMeter.MOD_ID, "inku"),
+            new Identifier(HeroMeter.MOD_ID, "inku_group"),
             FabricItemGroup.builder().displayName(Text.translatable("itemgroup.inku"))
                     .icon(() -> new ItemStack(ModItems.Hard_Boiled_Egg)).entries((displayContext, entries) -> {
                         entries.add(ModItems.Hard_Boiled_Egg);
+                        entries.add(ModItems.Hard_Boiled_Egg_Wearable);
 
                         entries.add(ModBlocks.Inku_Egg_Block);
 
+                        entries.add(Items.DRAGON_EGG);
                         entries.add(Items.EGG);
                         entries.add(Items.INK_SAC);
+                        entries.add(Items.GLOW_INK_SAC);
+                        entries.add(Items.FEATHER);
 
                     }).build());
 
