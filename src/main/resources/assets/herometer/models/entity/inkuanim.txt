@@ -1,0 +1,31 @@
+
+public static final Animation INKU_THE_MAN_ATTACK_BARE_HAND = Animation.Builder.create(0f).looping()
+.addBoneAnimation("rightArm",
+	new Transformation(Transformation.Targets.ROTATE,
+		new Keyframe(0f, AnimationHelper.createRotationalVector(NaNf, NaNf, NaNf),
+			Transformation.Interpolations.LINEAR))).build();
+public static final Animation INKU_THE_MAN_SWIMMING = Animation.Builder.create(0f).looping()
+.addBoneAnimation("body",
+	new Transformation(Transformation.Targets.TRANSLATE, 
+		new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, NaNf, NaNf),
+			Transformation.Interpolations.LINEAR)))
+.addBoneAnimation("body",
+	new Transformation(Transformation.Targets.ROTATE,
+		new Keyframe(0f, AnimationHelper.createRotationalVector(NaNf, 0f, 0f),
+			Transformation.Interpolations.LINEAR)))
+.addBoneAnimation("leftArm",
+	new Transformation(Transformation.Targets.ROTATE,
+		new Keyframe(0f, AnimationHelper.createRotationalVector(NaNf, NaNf, NaNf),
+			Transformation.Interpolations.LINEAR)))
+.addBoneAnimation("leftLeg",
+	new Transformation(Transformation.Targets.ROTATE,
+		new Keyframe(0f, AnimationHelper.createRotationalVector(NaNf, 0f, 0f),
+			Transformation.Interpolations.LINEAR)))
+.addBoneAnimation("rightArm",
+	new Transformation(Transformation.Targets.ROTATE,
+		new Keyframe(0f, AnimationHelper.createRotationalVector(NaNf, NaNf, NaNf),
+			Transformation.Interpolations.LINEAR)))
+.addBoneAnimation("rightLeg",
+	new Transformation(Transformation.Targets.ROTATE,
+		new Keyframe(0f, AnimationHelper.createRotationalVector(NaNf, 0f, 0f),
+			Transformation.Interpolations.LINEAR))).build();
