@@ -14,7 +14,7 @@ public class ModEntities {
     public static final EntityType<InkuEntity> INKU = Registry.register(Registries.ENTITY_TYPE,
             new Identifier(HeroMeter.MOD_ID, "inku"),
             FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, InkuEntity::new)
-                    .dimensions(EntityDimensions.fixed(1f, 2f)).build());
+                    .dimensions(EntityDimensions.fixed(.8f, 1.95f)).build());
     public static void registerModEntities() {
         HeroMeter.LOGGER.info("Registering Entities for " + HeroMeter.MOD_ID);
     }

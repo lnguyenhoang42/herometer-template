@@ -1,9 +1,8 @@
 package net.inancoldflower.herometer.entity.custom;
 
 import net.inancoldflower.herometer.entity.ModEntities;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityStatuses;
-import net.minecraft.entity.LivingEntity;
+import net.inancoldflower.herometer.entity.ai.InkuAttackGoal;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -11,11 +10,8 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.Angerable;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -33,8 +29,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class InkuEntity extends AnimalEntity implements Angerable {
-
-    protected static final TrackedData<Byte> INKU_MAN_FLAGS = DataTracker.registerData(IronGolemEntity.class, TrackedDataHandlerRegistry.BYTE);
+    private static final TrackedData<Boolean> ATTACKING =
+            DataTracker.registerData(InkuEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Byte> INKU_MAN_FLAGS = DataTracker.registerData(InkuEntity.class, TrackedDataHandlerRegistry.BYTE);
+    public final AnimationState idleAnimationState = new AnimationState();
+    private int idleAnimationTimeout = 0;
+    public final AnimationState aattackAnimationState = new AnimationState();
+    public int attackAnimationTimeout = 0;
     private int attackTicksLeft;
     private int lookingAtVillagerTicksLeft;
     private static final UniformIntProvider ANGER_TIME_RANGE = TimeHelper.betweenSeconds(20, 39);
@@ -45,37 +46,85 @@ public class InkuEntity extends AnimalEntity implements Angerable {
         super(entityType, world);
     }
 
+    private void setupAnimationStates() {
+        if (this.idleAnimationTimeout <= 0) {
+            this.idleAnimationTimeout = this.random.nextInt(40) + 80;
+            this.idleAnimationState.start(this.age);
+        } else {
+            --this.idleAnimationTimeout;
+        }
+
+        if(this.isAttacking() && attackAnimationTimeout <= 0) {
+            attackAnimationTimeout = 40;
+            aattackAnimationState.start(this.age);
+        } else {
+            --this.attackAnimationTimeout;
+        }
+
+        if(!this.isAttacking()) {
+            aattackAnimationState.stop();
+        }
+
+    }
+    @Override
+    protected void updateLimbs(float posDelta) {
+        float f = this.getPose() == EntityPose.STANDING ? Math.min(posDelta * 6.0f, 1.0f) : 0.0f;
+        this.limbAnimator.updateLimbs(f, 0.2f);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(this.getWorld().isClient) {
+            setupAnimationStates();
+        }
+    }
+
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-
         this.goalSelector.add(1, new AnimalMateGoal(this, 1.15D));
-        this.goalSelector.add(2, new TemptGoal(this, 1.25D, Ingredient.ofItems(Items.INK_SAC), false));
+        this.goalSelector.add(1, new InkuAttackGoal(this, 1D, true));
+        this.goalSelector.add(2, new TemptGoal(this, 1.05D, Ingredient.ofItems(Items.INK_SAC, Items.CHICKEN, Items.COOKED_CHICKEN), false));
+        this.goalSelector.add(2, new WanderNearTargetGoal(this, 1.05D, 32.0f));
+        this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.5D, false));
+        this.goalSelector.add(3, new FollowParentGoal(this, 1.05D));
+        this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 1.05D));
+        this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0f));
+        this.goalSelector.add(8, new LookAroundGoal(this));
+        this.targetSelector.add(2, new RevengeGoal(this));
+        this.targetSelector.add(3, new ActiveTargetGoal<PlayerEntity>(this, PlayerEntity.class, 10, true, false, this::shouldAngerAt));
+        this.targetSelector.add(3, new ActiveTargetGoal<MobEntity>(this, MobEntity.class, 5, false, false, entity -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
+        this.targetSelector.add(4, new UniversalAngerGoal<InkuEntity>(this, false));
+    }
 
-        this.goalSelector.add(3, new FollowParentGoal(this, 1.15D));
+    public void setAttacking(boolean attacking) {
+        this.dataTracker.set(ATTACKING, attacking);
+    }
 
-        this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 4f));
-        this.goalSelector.add(5, new WanderAroundGoal(this, 1D));
-        this.goalSelector.add(6, new LookAroundGoal(this));
+    @Override
+    public boolean isAttacking() {
+        return this.dataTracker.get(ATTACKING);
     }
 
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
+        this.dataTracker.startTracking(ATTACKING,false);
         this.dataTracker.startTracking(INKU_MAN_FLAGS, (byte)0);
-    };
+    }
 
     public static DefaultAttributeContainer.Builder createInkuAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 100)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, .2f)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 60)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3f)
                 .add(EntityAttributes.GENERIC_ARMOR, 0.5f)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 6);
-    };
+    }
 
     @Override
     public boolean isBreedingItem(ItemStack stack) {
-        return stack.isOf(Items.CHICKEN);
+        return stack.isOf(Items.CHICKEN) || stack.isOf(Items.COOKED_CHICKEN);
     }
 
     @Nullable
@@ -87,12 +136,15 @@ public class InkuEntity extends AnimalEntity implements Angerable {
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_CHICKEN_AMBIENT;
+        return SoundEvents.ENTITY_ILLUSIONER_AMBIENT;
     }
 
     @Override
     public boolean canTarget(EntityType<?> type) {
         if (this.isPlayerCreated() && type == EntityType.PLAYER) {
+            return false;
+        }
+        if (type == EntityType.CREEPER) {
             return false;
         }
         return super.canTarget(type);
@@ -135,7 +187,7 @@ public class InkuEntity extends AnimalEntity implements Angerable {
         } else {
             this.dataTracker.set(INKU_MAN_FLAGS, (byte)(b & 0xFFFFFFFE));
         }
-    };
+    }
 
     @Override
     public boolean canPickupItem(ItemStack stack) {
@@ -200,8 +252,7 @@ public class InkuEntity extends AnimalEntity implements Angerable {
         boolean bl = target.damage(this.getDamageSources().mobAttack(this), g);
         if (bl) {
             double d;
-            if (target instanceof LivingEntity) {
-                LivingEntity livingEntity = (LivingEntity)target;
+            if (target instanceof LivingEntity livingEntity) {
                 d = livingEntity.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
             } else {
                 d = 0.0;
@@ -222,5 +273,10 @@ public class InkuEntity extends AnimalEntity implements Angerable {
             this.playSound(SoundEvents.ENTITY_IRON_GOLEM_DAMAGE, 1.0f, 1.0f);
         }
         return bl;
+    }
+
+    @Override
+    public boolean canImmediatelyDespawn(double distanceSquared) {
+        return false;
     }
 }
