@@ -1,19 +1,7 @@
 {
   "variants": {
-    "facing=east": {
-      "model": "herometer:block/inku_egg_block",
-      "y": 90
-    },
-    "facing=north": {
+    "": {
       "model": "herometer:block/inku_egg_block"
-    },
-    "facing=south": {
-      "model": "herometer:block/inku_egg_block",
-      "y": 180
-    },
-    "facing=west": {
-      "model": "herometer:block/inku_egg_block",
-      "y": 270
     }
   }
 }

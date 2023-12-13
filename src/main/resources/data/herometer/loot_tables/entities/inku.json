@@ -53,7 +53,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:inku_egg"
+          "name": "herometer:inku_egg"
         }
       ],
       "rolls": 1.0

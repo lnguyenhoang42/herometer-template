@@ -2,7 +2,7 @@ package net.inancoldflower.herometer;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.inancoldflower.herometer.block.datagen.ModModelProvider;
+import net.inancoldflower.herometer.data.ModModelProvider;
 
 public class HeroMeterDataGenerator implements DataGeneratorEntrypoint {
 	@Override
